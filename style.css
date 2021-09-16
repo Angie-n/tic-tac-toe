@@ -1,0 +1,90 @@
+body {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    color: white;
+    font-family: Chalkduster, fantasy;
+    background-color: rgb(19, 16, 16);
+}
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 0;
+}
+
+#scoreboard {
+    display: flex;
+    justify-content: center;
+}
+
+.player-mark {
+    font-size: 40px;
+    margin: auto;
+    margin-top: 10px;
+    width: 50px;
+}
+
+#player1-mark {
+    color: rgb(42, 141, 233);
+}
+
+#player2-mark {
+    color: rgb(199, 37, 8);
+}
+
+.name-score {
+    display: flex;
+    align-items: center;
+    height: 35px;
+}
+
+.player-name {
+    font-size: 35px;
+}
+
+#player2-name {
+    margin-left: 30px;
+}
+
+.player-score {
+    font-size: 30px;
+    margin-left: 10px;
+}
+
+#player1-score {
+    margin-right: 30px;
+}
+
+#game-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.grid-row {
+    display: flex;
+    width: 450px;
+}
+
+.grid-box {
+    width: 150px;
+    height: 150px;
+    font-size: 120px;
+}
+
+.top  {
+    border-bottom: 3px solid white;
+}
+
+.bottom {
+    border-top: 3px solid white;
+}
+
+.left {
+    border-right: 3px solid white;
+}
+
+.right {
+    border-left: 3px solid white;
+}
