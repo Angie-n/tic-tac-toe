@@ -30,13 +30,20 @@
                 </div>
             </div>
             <h2 id="vs-status">
-                <div id="p1-name">_____</div>
-                <button id="p1-edit-btn" class="edit-btn"><i class="fas fa-edit"></i></button>
-                <div id="vs">VS</div>
-                <div id="p2-name">_____</div>
-                <button id="p2-edit-btn" class="edit-btn"><i class="fas fa-edit"></i></button>
+                <div id="name1-container" class="name-container">
+                    <div id="p1-name">_____</div>
+                    <input type="text" id="p1name" name="p1name" maxlength="15">
+                    <button id="p1-edit-btn" class="edit-btn"><i class="fas fa-edit"></i></button>
+                </div>
+                <div id="vs">VS.</div>
+                <div id="name2-container" class="name-container">
+                    <div id="p2-name">_____</div>
+                    <input type="text" id="p2name" name="p2name" maxlength="15">
+                    <button id="p2-edit-btn" class="edit-btn"><i class="fas fa-edit"></i></button>
+                </div>
             </h2>
             <button id="start-btn">Start Game</button>
+            <p id="error-message"></p>
         </div>
         <div id="game-session">
             <div id="scoreboard">

@@ -70,6 +70,7 @@ button {
 
 #vs {
     margin: 0 10px 0 10px;
+    font-size: 25px;
 }
 
 .edit-btn {
@@ -85,6 +86,21 @@ button {
     color: rgb(199, 37, 8);
 }
 
+.name-container {
+    display: flex;
+}
+
+input {
+    display: none;
+    background-color: transparent;
+    border: none;
+    border-bottom: 5px solid white;
+    font-size: inherit;
+    font-family: inherit;
+    color: inherit;
+    width: 150px;
+}
+
 #start-btn {
     margin-top: 20px;
     font-size: 35px;
@@ -92,6 +108,10 @@ button {
 
 #start-btn:hover {
     font-size: 40px;
+}
+
+#error-message {
+    color: rgb(248, 195, 184);
 }
 
 #game-session {
