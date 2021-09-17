@@ -1,10 +1,101 @@
+/*rgb(214, 146, 56); */
 body {
     padding: 0;
     margin: 0;
     text-align: center;
     color: white;
     font-family: Chalkduster, fantasy;
-    background-color: rgb(19, 16, 16);
+    background-color: rgb(39, 38, 41);
+}
+
+button {
+    font-family: inherit;
+    color: white;
+    background-color: transparent;
+    border: none;
+}
+
+#player-selection-container {
+    display: flex;
+    justify-content: center;
+}
+
+.player-selection {
+    margin: 10px;
+    padding: 20px;
+    border: 2px solid white;
+}
+
+.selection-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    font-size: 20px;
+}
+
+.selection-btn i {
+    font-size: 70px;
+}
+
+.selection-btns {
+    display: flex;
+}
+
+#p1-btn-container > button:hover {
+    text-shadow: 0px 0px 30px rgb(42, 141, 233);
+    font-size: 25px;
+}
+
+.p1-clicked {
+    color: rgb(42, 141, 233);
+}
+
+#p2-btn-container > button:hover {
+    text-shadow: 0px 0px 30px rgb(199, 37, 8);
+    font-size: 25px;
+}
+
+.p2-clicked {
+    color: rgb(199, 37, 8);
+}
+
+#vs-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#vs {
+    margin: 0 10px 0 10px;
+}
+
+.edit-btn {
+    display: none;
+    font-size: 15px;
+}
+
+#p1-edit-btn:hover {
+    color: rgb(42, 141, 233);
+}
+
+#p2-edit-btn:hover {
+    color: rgb(199, 37, 8);
+}
+
+#start-btn {
+    margin-top: 20px;
+    font-size: 35px;
+}
+
+#start-btn:hover {
+    font-size: 40px;
+}
+
+#game-session {
+    display: none;
 }
 
 h1 {
@@ -24,11 +115,11 @@ h1 {
     width: 50px;
 }
 
-#player1-mark {
+.x-mark {
     color: rgb(42, 141, 233);
 }
 
-#player2-mark {
+.o-mark {
     color: rgb(199, 37, 8);
 }
 

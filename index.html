@@ -5,22 +5,50 @@
         <link rel="stylesheet" href="style.css">
         <script src="script.js" defer></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://kit.fontawesome.com/bc1bc2b6f5.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <header>
             <h1>Tic-Tac-Toe</h1>
         </header>
-        <body>
+        <div id="start-session">
+            <h2>Customize your Game</h2>
+            <div id="player-selection-container">
+                <div id="p1-selection" class="player-selection">
+                    <h3 class="player-mark x-mark">X</h3>
+                    <div id="p1-btn-container" class="selection-btns">
+                        <button id="p1-btn" class="player-choice selection-btn"><i class="fas fa-user-ninja"></i>Player</button>
+                        <button id="b1-btn" class="bot-choice selection-btn"><i class="fas fa-robot"></i>Bot</button>
+                    </div>
+                </div>
+                <div id="p2-selection" class="player-selection">
+                    <h3 class="player-mark o-mark">O</h3>
+                    <div id="p2-btn-container" class="selection-btns">
+                        <button id="p2-btn" class="player-choice selection-btn"><i class="fas fa-user-ninja"></i>Player</button>
+                        <button id="b2-btn" class="bot-choice selection-btn"><i class="fas fa-robot"></i>Bot</button>
+                    </div>
+                </div>
+            </div>
+            <h2 id="vs-status">
+                <div id="p1-name">_____</div>
+                <button id="p1-edit-btn" class="edit-btn"><i class="fas fa-edit"></i></button>
+                <div id="vs">VS</div>
+                <div id="p2-name">_____</div>
+                <button id="p2-edit-btn" class="edit-btn"><i class="fas fa-edit"></i></button>
+            </h2>
+            <button id="start-btn">Start Game</button>
+        </div>
+        <div id="game-session">
             <div id="scoreboard">
                 <div id="player1-info" class="player-info">
-                    <div id="player1-mark" class="player-mark">X</div>
+                    <div class="player-mark x-mark">X</div>
                     <div class="name-score">
                         <h2 id="player1-name" class="player-name">Player 1:</h2>
                         <p id="player1-score" class="player-score">0</p>
                     </div>
                 </div>
                 <div id="player2-info" class="player-info">
-                    <div id="player2-mark" class="player-mark">O</div>
+                    <div class="player-mark o-mark">O</div>
                     <div class="name-score">
                         <h2 id="player2-name" class="player-name">Player 2:</h2>
                         <p id="player2-score" class="player-score">0</p>
@@ -44,6 +72,7 @@
                     <div id="bottom-right-box" class="grid-box bottom right"></div>
                 </div>
             </div>
-        </body>
+            <h2 id="turn-display">Player 1's Turn...</h2>
+        </div>
     </body>
 </html>
