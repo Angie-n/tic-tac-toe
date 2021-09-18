@@ -34,6 +34,10 @@ let gameBoard = (() => {
 
     const getNeedChangeScore = () => needChangeScore;
 
+    gridBox.forEach((box,index) => {
+        box.setAttribute("data-arrPos", index);
+    })
+
     function checkForWin() {
         gameBoard.forEach((box, index) => {
             let i1;
@@ -101,11 +105,54 @@ let gameBoard = (() => {
             needChangeScore = true;
             player.updateScore();
             needChangeScore = false;
-            if(player.getName() === player1.getName()) document.getElementById("player1-score").textContent = player1.getScore();
+            if(player === player1) document.getElementById("player1-score").textContent = player1.getScore();
             else document.getElementById("player2-score").textContent = player2.getScore();
         }
         else turnDisplay.textContent = "Tied game!";
     }
+
+    function botMove(player) {
+        let boxesLeft = gridBox.filter(box => {
+            return box.textContent === "";
+        })
+        let leftArrIndex = Math.floor(Math.random() * boxesLeft.length);
+        let boxIndex = parseInt(boxesLeft[leftArrIndex].getAttribute("data-arrPos"));
+        player.placeMark(gameBoard, gridBox[boxIndex], boxIndex);
+        if(player === player1) isP1Turn = false;
+        else isP1Turn = true;
+        showConsequences(player);
+    }
+
+    function showConsequences(player) {
+        let oppPlayer;
+        if (player === player1) oppPlayer = player2;
+        else oppPlayer = player1;
+        checkForWin();
+        if(!isGameOver)checkForTie();
+        if(!isGameOver)turnDisplay.textContent = `${oppPlayer.getName()}'s turn...`;
+        else showEndResults(player);
+    }
+
+    function botAutoPlay() {
+        if(!player1.getIsPlayer() && !player2.getIsPlayer()) {
+            while(!isGameOver) {
+                botMove(player1);
+                if(!isGameOver) {
+                    botMove(player2);
+                }
+            }
+        }
+        else if(!player1.getIsPlayer()) {
+            botMove(player1);
+            isP1Turn = false;
+        }
+    }
+
+    document.getElementById("start-btn").addEventListener("click", () => {
+        if(player1 !== undefined){
+            botAutoPlay();
+        }
+    })
 
     gridBox.forEach((box, index) => {
         gameBoard[index] = "";
@@ -114,38 +161,35 @@ let gameBoard = (() => {
                 if(isP1Turn) {
                     player1.placeMark(gameBoard, box, index);
                     isP1Turn = false;
-                    checkForWin();
-                    if(!isGameOver)checkForTie();
-                    if(!isGameOver)turnDisplay.textContent = `${player2.getName()}'s turn...`;
-                    else showEndResults(player1);
+                    showConsequences(player1);
+                    if(!isGameOver && !player2.getIsPlayer()) botMove(player2);
                 }
                 else {
                     player2.placeMark(gameBoard, box, index);
                     isP1Turn = true;
-                    checkForWin();
-                    if(!isGameOver)checkForTie();
-                    if(!isGameOver)turnDisplay.textContent = `${player1.getName()}'s turn...`
-                    else showEndResults(player2);
+                    showConsequences(player2);
+                    if(!isGameOver && !player1.getIsPlayer()) botMove(player1);
                 }
             }
         });
     });
 
     function restartBoard() {
+        turnDisplay.textContent = `${player1.getName()}'s turn...`;
+        restartBtns.style.display = "none";
+        isP1Turn = true;
+        isGameOver = false;
+        isTieGame = false;
         gridBox.forEach((box, index) => {
             gameBoard[index] = "";
             box.textContent = "";
-            isP1Turn = true;
-            isGameOver = false;
-            isTieGame = false;
             box.style.textShadow = "none";
-            turnDisplay.textContent = `${player1.getName()}'s turn...`;
-            restartBtns.style.display = "none";
         }) 
     }
 
     document.getElementById("rematch-btn").addEventListener("click", () => {
         restartBoard();
+        botAutoPlay();
     });
 
     document.getElementById("new-game-btn").addEventListener("click", () => {
@@ -251,7 +295,7 @@ let gameSettings = (() => {
             document.getElementById("turn-display").textContent = `${player1.getName()}'s turn...`
         }
         else if (p1IsPlayer === undefined || p2IsPlayer === undefined) {
-            error.textContent = "ERROR: Select a player or bot";
+            error.textContent = "ERROR: Select a player or bot for both markers";
         }
         else {
             error.textContent = "ERROR: Finish inputting a name";
@@ -271,7 +315,7 @@ let gameSettings = (() => {
         });
     });
 
-    document.getElementById("start-btn").addEventListener("click", () => {
+    document.getElementById("start-btn").addEventListener("mouseup", () => {
         startOrDisplayError();
     });
     
