@@ -1,9 +1,10 @@
 /*rgb(214, 146, 56); */
 body {
+    --main-color: white;
     padding: 0;
     margin: 0;
     text-align: center;
-    color: white;
+    color: var(--main-color);
     font-family: Chalkduster, fantasy;
     background-color: rgb(39, 38, 41);
 }
@@ -14,9 +15,20 @@ h1 {
     margin-top: 10px;
 }
 
+#dark-light-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 25px;
+}
+
+#dark-light-btn:hover {
+    color: gray;
+}
+
 button {
     font-family: inherit;
-    color: white;
+    color: inherit;
     background-color: transparent;
     border: none;
 }
@@ -30,7 +42,7 @@ button {
 .player-selection {
     margin: 10px;
     padding: 20px;
-    border: 2px solid white;
+    border: 2px solid var(--main-color);
 }
 
 .selection-btn {
@@ -102,7 +114,7 @@ input {
     display: none;
     background-color: transparent;
     border: none;
-    border-bottom: 5px solid white;
+    border-bottom: 5px solid var(--main-color);
     font-size: inherit;
     font-family: inherit;
     color: inherit;
@@ -119,7 +131,7 @@ input {
 }
 
 #error-message {
-    color: rgb(248, 195, 184);
+    color: rgb(226, 140, 122);
 }
 
 #game-session {
@@ -178,23 +190,23 @@ input {
 .grid-box {
     width: 125px;
     height: 125px;
-    font-size: 100px;
+    font-size: 120px;
 }
 
 .top  {
-    border-bottom: 3px solid white;
+    border-bottom: 3px solid var(--main-color);
 }
 
 .bottom {
-    border-top: 3px solid white;
+    border-top: 3px solid var(--main-color);
 }
 
 .left {
-    border-right: 3px solid white;
+    border-right: 3px solid var(--main-color);
 }
 
 .right {
-    border-left: 3px solid white;
+    border-left: 3px solid var(--main-color);
 }
 
 #turn-display {
@@ -209,9 +221,9 @@ input {
 
 .restart-btn {
     font-size: 20px;
-    border: 5px solid white;
+    border: 5px solid var(--main-color);
 }
 
 .restart-btn:hover {
-    box-shadow: 0px 0px 20px white;
+    box-shadow: 0px 0px 20px var(--main-color);
 }

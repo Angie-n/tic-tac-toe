@@ -16,7 +16,7 @@ const Player = (name, isPlayer, mark) => {
     }
 
     const updateScore = () => {
-        if(gameBoard.getNeedChangeScore) score++;
+        if(gameBoard.getNeedChangeScore()) score++;
     }
     
     return {getName, getIsPlayer, getMark, placeMark, getScore, updateScore}
@@ -131,7 +131,7 @@ let gameBoard = (() => {
         });
     });
 
-    document.getElementById("rematch-btn").addEventListener("click", () => {
+    function restartBoard() {
         gridBox.forEach((box, index) => {
             gameBoard[index] = "";
             box.textContent = "";
@@ -142,10 +142,18 @@ let gameBoard = (() => {
             turnDisplay.textContent = `${player1.getName()}'s turn...`;
             restartBtns.style.display = "none";
         }) 
+    }
+
+    document.getElementById("rematch-btn").addEventListener("click", () => {
+        restartBoard();
     });
 
     document.getElementById("new-game-btn").addEventListener("click", () => {
-        location.reload();
+        restartBoard();
+        document.getElementById("player1-score").textContent = "0";
+        document.getElementById("player2-score").textContent = "0";
+        document.getElementById("start-session").style.display = "block";
+        document.getElementById("game-session").style.display = "none";
     });
 
     return {getNeedChangeScore}
@@ -158,6 +166,10 @@ let gameSettings = (() => {
     let p2IsPlayer;
     let p1Name;
     let p2Name;
+    let isDarkMode = true;
+
+    const getIsDarkMode = () => isDarkMode;
+    const setIsDarkMode = (val) => isDarkMode = val;
 
     const togglePlayerBot = (btn, n) => {
         btn.classList.add(`p${n}-clicked`);
@@ -262,4 +274,26 @@ let gameSettings = (() => {
     document.getElementById("start-btn").addEventListener("click", () => {
         startOrDisplayError();
     });
+    
+    const setMode = () =>{
+        let body = document.querySelector("body");
+        if(isDarkMode) {
+            isDarkMode = false;
+            body.style.backgroundColor = "white";
+            body.style.fontFamily = "Marker Felt, fantasy";
+            body.style.setProperty("--main-color", "black");
+        }
+        else {
+            isDarkMode = true;
+            body.style.backgroundColor = "rgb(39, 38, 41)";
+            body.style.fontFamily = "Chalkduster, fantasy";
+            body.style.setProperty("--main-color", "white");
+        }
+    }
+
+    document.getElementById("dark-light-btn").addEventListener("click", () => {
+        setMode();
+    });
+
+    return {getIsDarkMode, setIsDarkMode, setMode}
 })();
