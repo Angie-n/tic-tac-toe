@@ -31,6 +31,7 @@ let gameBoard = (() => {
     let isTieGame = false;
     let isP1Turn = true;
     let needChangeScore = false;
+    let markedBox;
 
     const getNeedChangeScore = () => needChangeScore;
 
@@ -39,53 +40,75 @@ let gameBoard = (() => {
     })
 
     function checkForWin() {
-        gameBoard.forEach((box, index) => {
-            let i1;
-            let i2;
-            let i3;
+        let i1;
+        let i2;
+        let i3;
+        let index = parseInt(markedBox.getAttribute("data-arrPos"));
 
-            function checkFor3() {
-                if(gameBoard[i1] === player1.getMark() && gameBoard[i2] === player1.getMark() && gameBoard[i3] === player1.getMark() 
-                    || gameBoard[i1] === player2.getMark() && gameBoard[i2] === player2.getMark() && gameBoard[i3] ===  player2.getMark()) {
-                    isGameOver = true;  
-                    textShadow = `0 0 60px ${gridBox[i1].style.color}`;
-                    gridBox[i1].style.textShadow = textShadow;
-                    gridBox[i2].style.textShadow = textShadow;
-                    gridBox[i3].style.textShadow = textShadow; 
-                }
+        function checkFor3() {
+            if(gameBoard[i1] === player1.getMark() && gameBoard[i2] === player1.getMark() && gameBoard[i3] === player1.getMark() 
+                || gameBoard[i1] === player2.getMark() && gameBoard[i2] === player2.getMark() && gameBoard[i3] ===  player2.getMark()) {
+                isGameOver = true;  
+                textShadow = `0 0 60px ${gridBox[i1].style.color}`;
+                gridBox[i1].style.textShadow = textShadow;
+                gridBox[i2].style.textShadow = textShadow;
+                gridBox[i3].style.textShadow = textShadow; 
             }
+        }
 
-            function checkForHorizontalWin() {
-                if(index % 3 === 0) {
-                    i1 = index;
-                    i2 = index+1;
-                    i3 = index+2;
-                    checkFor3();
-                }
+        function checkForHorizontalWin() {
+            if(index % 3 === 0) {
+                i1 = index;
+                i2 = index+1;
+                i3 = index+2;
             }
-            function checkForVerticalWin() {
-                if(index < 3) {
-                    i1 = index;
-                    i2 = index+3;
-                    i3 = index+6;
-                    checkFor3();
-                }
+            else if(index % 3 === 1) {
+                i1 = index - 1;
+                i2 = index;
+                i3 = index+1;
             }
-            function checkForDiagonalWin() {
+            else {
+                i1 = index - 2;
+                i2 = index - 1;
+                i3 = index;
+            }
+            checkFor3();
+        }
+        function checkForVerticalWin() {
+            if(index < 3) {
+                i1 = index;
+                i2 = index+3;
+                i3 = index+6;
+            }
+            else if (index < 6) {
+                i1 = index - 3;
+                i2 = index;
+                i3 = index + 3;
+            }
+            else {
+                i1 = index - 6;
+                i2 = index - 3;
+                i3 = index;
+            }
+            checkFor3();
+        }
+        function checkForDiagonalWin() {
+            if(index === 0 || index === 4 || index === 8) {
                 i1 = 0;
                 i2 = 4;
                 i3 = 8;
                 checkFor3();
-
+            }
+            if(index === 2 || index === 4 || index === 6) {
                 i1 = 2;
                 i2 = 4;
                 i3 = 6;
                 checkFor3();
             }
-            checkForHorizontalWin();
-            if(!isGameOver)checkForVerticalWin();
-            if(!isGameOver)checkForDiagonalWin();
-        });
+        }
+        checkForHorizontalWin();
+        if(!isGameOver)checkForVerticalWin();
+        if(!isGameOver)checkForDiagonalWin();
     }
 
     function checkForTie() {
@@ -117,7 +140,8 @@ let gameBoard = (() => {
         })
         let leftArrIndex = Math.floor(Math.random() * boxesLeft.length);
         let boxIndex = parseInt(boxesLeft[leftArrIndex].getAttribute("data-arrPos"));
-        player.placeMark(gameBoard, gridBox[boxIndex], boxIndex);
+        markedBox = gridBox[boxIndex];
+        player.placeMark(gameBoard, markedBox, boxIndex);
         if(player === player1) isP1Turn = false;
         else isP1Turn = true;
         showConsequences(player);
@@ -158,6 +182,7 @@ let gameBoard = (() => {
         gameBoard[index] = "";
         box.addEventListener("click", e => {
             if(box.textContent === "" && !isGameOver) {
+                markedBox = box;
                 if(isP1Turn) {
                     player1.placeMark(gameBoard, box, index);
                     isP1Turn = false;
