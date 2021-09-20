@@ -144,6 +144,11 @@ let gameBoard = (() => {
         else turnDisplay.textContent = "Tied game!";
     }
 
+    function findOtherPlayer(player) {
+        if(player === player1) return player2;
+        else return player1;
+    }
+
     function getMoveImmediateConsequence(board, player) {
         checkForTie(board);
         checkForWin(board);
@@ -193,11 +198,6 @@ let gameBoard = (() => {
             }
         });
         return goodMove;
-    }
-
-    function findOtherPlayer(player) {
-        if(player === player1) return player2;
-        else return player1;
     }
 
     function minimax(board, depth, isMaximize, player) {
@@ -265,10 +265,15 @@ let gameBoard = (() => {
 
     function botMove(player) {
         let boxIndex;
-        if(player.getName() === "Easy Bot") {
-            let boxesLeft = gridBox.filter(box => {
-                return box.textContent === "";
-            })
+        let boxesLeft = gridBox.filter(box => {
+            return box.textContent === "";
+        });
+        if(player.getName() === "Easy Bot" || boxesLeft.length === 9) {
+            if(player.getName() === "Unbeatable Bot") {
+                boxesLeft = boxesLeft.filter(box => {
+                    return box.getAttribute("data-arrPos") % 2 === 0;
+                })
+            }
             let leftArrIndex = Math.floor(Math.random() * boxesLeft.length);
             boxIndex = parseInt(boxesLeft[leftArrIndex].getAttribute("data-arrPos"));
         }
