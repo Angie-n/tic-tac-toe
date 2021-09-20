@@ -146,7 +146,7 @@ input {
 }
 
 #scoreboard > div, h2, p {
-    margin: 5px 0 5px 0;
+    margin: 2px 0 2px 0;
 }
 
 .player-mark {
@@ -180,7 +180,8 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 30px;
+    justify-content: center;
+    margin: 5px 0 5px 0;
 }
 
 .grid-row {

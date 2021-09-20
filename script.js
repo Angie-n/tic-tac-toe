@@ -32,6 +32,8 @@ let gameBoard = (() => {
     let isP1Turn = true;
     let needChangeScore = false;
     let markedBox;
+    let isTesting = false;
+    let gameStatus;
 
     const getNeedChangeScore = () => needChangeScore;
 
@@ -39,20 +41,25 @@ let gameBoard = (() => {
         box.setAttribute("data-arrPos", index);
     })
 
-    function checkForWin() {
+    function checkForWin(board) {
         let i1;
         let i2;
         let i3;
-        let index = parseInt(markedBox.getAttribute("data-arrPos"));
+        let index = markedBox;
 
         function checkFor3() {
-            if(gameBoard[i1] === player1.getMark() && gameBoard[i2] === player1.getMark() && gameBoard[i3] === player1.getMark() 
-                || gameBoard[i1] === player2.getMark() && gameBoard[i2] === player2.getMark() && gameBoard[i3] ===  player2.getMark()) {
-                isGameOver = true;  
-                textShadow = `0 0 60px ${gridBox[i1].style.color}`;
-                gridBox[i1].style.textShadow = textShadow;
-                gridBox[i2].style.textShadow = textShadow;
-                gridBox[i3].style.textShadow = textShadow; 
+            if(board[i1] === player1.getMark() && board[i2] === player1.getMark() && board[i3] === player1.getMark() 
+                || board[i1] === player2.getMark() && board[i2] === player2.getMark() && board[i3] ===  player2.getMark()) {
+                if(!isTesting) {
+                    isGameOver = true;  
+                    textShadow = `0 0 60px ${gridBox[i1].style.color}`;
+                    gridBox[i1].style.textShadow = textShadow;
+                    gridBox[i2].style.textShadow = textShadow;
+                    gridBox[i3].style.textShadow = textShadow; 
+                }
+                else {
+                    gameStatus = "win";
+                }
             }
         }
 
@@ -111,13 +118,16 @@ let gameBoard = (() => {
         if(!isGameOver)checkForDiagonalWin();
     }
 
-    function checkForTie() {
-        let remainingBoxes = gameBoard.filter(box => {
+    function checkForTie(board) {
+        let remainingBoxes = board.filter(box => {
             return box === "";
         })
         if (remainingBoxes.length === 0) {
-            isGameOver = true;
-            isTieGame = true;
+            if(!isTesting) {
+                isGameOver = true;
+                isTieGame = true;
+            }
+            else gameStatus = "tie";
         }
     }
 
@@ -134,14 +144,92 @@ let gameBoard = (() => {
         else turnDisplay.textContent = "Tied game!";
     }
 
+    function findOtherPlayer(player) {
+        if(player === player1) return player2;
+        else return player1;
+    }
+
+    function minimax(board, depth, isMaximize, player) {
+        checkForTie(board);
+        checkForWin(board);
+        if(gameStatus === "win") {
+            gameStatus = null;
+            if(isMaximize) return -10 + depth;
+            else return 10 - depth;
+        }
+        else if (gameStatus === "tie") {
+            gameStatus = null;
+            if(isMaximize) return 0 + depth;
+            return 0 - depth;
+        }
+        else if(isMaximize) {
+            let otherPlayer = findOtherPlayer(player);
+            let bestScore = -Infinity;
+            board.forEach((box, index) => {
+                if(board[index] === "") {
+                    board[index] = player.getMark();
+                    markedBox = index;
+                    score = minimax(board, depth + 1, false, otherPlayer);
+                    board[index] = "";
+                    bestScore = Math.max(score, bestScore);
+                }
+            });
+            return bestScore;
+        }
+        else {
+            let otherPlayer = findOtherPlayer(player);
+            let bestScore = Infinity;
+            board.forEach((box, index) => {
+                if(board[index] === "") {
+                    board[index] = player.getMark();
+                    markedBox = index;
+                    score = minimax(board, depth + 1, true, otherPlayer);
+                    board[index] = "";
+                    bestScore = Math.min(score, bestScore);
+                }
+            });
+            return bestScore;
+        }
+    }
+
+    function getBestMove(board, player) {
+        let bestMove;
+        let score;
+        let otherPlayer = findOtherPlayer(player);
+        let bestScore = -Infinity;
+        board.forEach((box, index) => {
+            if(board[index] === "") {
+                board[index] = player.getMark();
+                markedBox = index;
+                score = minimax(board, 1, false, otherPlayer);
+                board[index] = "";
+                if(score > bestScore) {
+                    bestScore = score;
+                    bestMove = index;
+                }
+            }
+        });
+        return bestMove;
+    }
+
     function botMove(player) {
-        let boxesLeft = gridBox.filter(box => {
-            return box.textContent === "";
-        })
-        let leftArrIndex = Math.floor(Math.random() * boxesLeft.length);
-        let boxIndex = parseInt(boxesLeft[leftArrIndex].getAttribute("data-arrPos"));
-        markedBox = gridBox[boxIndex];
-        player.placeMark(gameBoard, markedBox, boxIndex);
+        let boxIndex;
+        if(player.getName() === "Easy Bot") {
+            let boxesLeft = gridBox.filter(box => {
+                return box.textContent === "";
+            })
+            let leftArrIndex = Math.floor(Math.random() * boxesLeft.length);
+            boxIndex = parseInt(boxesLeft[leftArrIndex].getAttribute("data-arrPos"));
+        }
+        else {
+            isTesting = true;
+            let boardCopy = [...gameBoard];
+            boxIndex = getBestMove(boardCopy, player);
+            console.log(boxIndex);
+            isTesting = false;
+        }
+        markedBox = boxIndex;
+        player.placeMark(gameBoard, gridBox[boxIndex], boxIndex);
         if(player === player1) isP1Turn = false;
         else isP1Turn = true;
         showConsequences(player);
@@ -151,8 +239,8 @@ let gameBoard = (() => {
         let oppPlayer;
         if (player === player1) oppPlayer = player2;
         else oppPlayer = player1;
-        checkForWin();
-        if(!isGameOver)checkForTie();
+        checkForWin(gameBoard);
+        if(!isGameOver)checkForTie(gameBoard);
         if(!isGameOver)turnDisplay.textContent = `${oppPlayer.getName()}'s turn...`;
         else showEndResults(player);
     }
@@ -182,7 +270,7 @@ let gameBoard = (() => {
         gameBoard[index] = "";
         box.addEventListener("click", e => {
             if(box.textContent === "" && !isGameOver) {
-                markedBox = box;
+                markedBox = index;
                 if(isP1Turn) {
                     player1.placeMark(gameBoard, box, index);
                     isP1Turn = false;
@@ -257,16 +345,16 @@ let gameSettings = (() => {
         else {
             if(n === 1) {
                 p1IsPlayer = false;
-                p1Name = "Bot";
+                p1Name = "Easy Bot";
             }
             else {
                 p2IsPlayer = false;
-                p2Name = "Bot";
+                p2Name = "Easy Bot";
             }
             let editBtn = document.getElementById(`p${n}-edit-btn`);
             if(editBtn.firstChild.classList[1] === "fa-check-square") toggleInput(editBtn);
             document.getElementById(`p${n}-btn`).classList.remove(`p${n}-clicked`);
-            document.getElementById(`p${n}-name`).textContent = `Bot`;
+            document.getElementById(`p${n}-name`).textContent = `Easy Bot`;
         }
         document.getElementById(`p${n}-edit-btn`).style.display = "block";
     }
@@ -290,6 +378,11 @@ let gameSettings = (() => {
             nameDisplay.style.display = "block";
         }
 
+        function changeBotDifficulty() {
+            if(nameDisplay.textContent === "Easy Bot") nameDisplay.textContent = "Unbeatable Bot";
+            else if (nameDisplay.textContent === "Unbeatable Bot") nameDisplay.textContent = "Easy Bot";
+        }
+
         if((btn.id === "p1-edit-btn" && p1IsPlayer) || (btn.id === "p2-edit-btn" && p2IsPlayer)) {
             if(btnIcon.classList[1] === "fa-edit") makeInputVisible()
             else {
@@ -301,7 +394,10 @@ let gameSettings = (() => {
         }
         else if (btnIcon.classList[1] === "fa-check-square"){
             makeInputInvisible()
-            nameDisplay.textContent = "Bot";
+            nameDisplay.textContent = "Easy Bot";
+        }
+        else if ((btn.id === "p1-edit-btn" && !p1IsPlayer) || (btn.id === "p2-edit-btn") && !p2IsPlayer) {
+            changeBotDifficulty();
         }
 
         p1Name = document.getElementById("p1-name").textContent;
