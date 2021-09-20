@@ -144,6 +144,57 @@ let gameBoard = (() => {
         else turnDisplay.textContent = "Tied game!";
     }
 
+    function getMoveImmediateConsequence(board, player) {
+        checkForTie(board);
+        checkForWin(board);
+        if(gameStatus === "win") {
+            gameStatus = null;
+            return 10;
+        }
+        else if (gameStatus === "tie") {
+            gameStatus = null;
+            return 0;
+        }
+        else {  
+            let bestScore = Infinity;
+            board.forEach((box, index) => {
+                if(board[index] === "") {
+                    board[index] = player.getMark();
+                    markedBox = index;
+                    checkForWin(board);
+                    if(gameStatus === "win") {
+                        gameStatus = null;
+                        score = -10;
+                    }
+                    else score = 0;
+                    board[index] = "";
+                    bestScore = Math.min(bestScore, score);
+                }
+            });
+            return bestScore;
+        }
+    }
+
+    function getGoodMove(board, player) {
+        let score;
+        let goodMove;
+        let otherPlayer = findOtherPlayer(player);
+        let bestScore = -Infinity;
+        board.forEach((box, index) => {
+            if(board[index] === "") {
+                board[index] = player.getMark();
+                markedBox = index;
+                score = getMoveImmediateConsequence(board, otherPlayer);
+                board[index] = "";
+                if(score > bestScore) {
+                    bestScore = score;
+                    goodMove = index;
+                }
+            }
+        });
+        return goodMove;
+    }
+
     function findOtherPlayer(player) {
         if(player === player1) return player2;
         else return player1;
@@ -221,11 +272,16 @@ let gameBoard = (() => {
             let leftArrIndex = Math.floor(Math.random() * boxesLeft.length);
             boxIndex = parseInt(boxesLeft[leftArrIndex].getAttribute("data-arrPos"));
         }
+        else if(player.getName() === "Medium Bot") {
+            isTesting = true;
+            let boardCopy = [...gameBoard];
+            boxIndex = getGoodMove(boardCopy, player);
+            isTesting = false;
+        }
         else {
             isTesting = true;
             let boardCopy = [...gameBoard];
             boxIndex = getBestMove(boardCopy, player);
-            console.log(boxIndex);
             isTesting = false;
         }
         markedBox = boxIndex;
@@ -379,8 +435,9 @@ let gameSettings = (() => {
         }
 
         function changeBotDifficulty() {
-            if(nameDisplay.textContent === "Easy Bot") nameDisplay.textContent = "Unbeatable Bot";
-            else if (nameDisplay.textContent === "Unbeatable Bot") nameDisplay.textContent = "Easy Bot";
+            if(nameDisplay.textContent === "Easy Bot") nameDisplay.textContent = "Medium Bot";
+            else if (nameDisplay.textContent === "Medium Bot") nameDisplay.textContent = "Unbeatable Bot";
+            else nameDisplay.textContent = "Easy Bot";
         }
 
         if((btn.id === "p1-edit-btn" && p1IsPlayer) || (btn.id === "p2-edit-btn" && p2IsPlayer)) {
