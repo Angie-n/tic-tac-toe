@@ -19,7 +19,7 @@ h1 {
     position: absolute;
     top: 0;
     right: 0;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 #dark-light-btn:hover {
@@ -140,8 +140,7 @@ input {
 
 #scoreboard {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -181,7 +180,7 @@ input {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 5px 0 5px 0;
+    margin: 5px auto 5px auto;
 }
 
 .grid-row {
@@ -228,3 +227,33 @@ input {
 .restart-btn:hover {
     box-shadow: 0px 0px 20px var(--main-color);
 }
+
+@media screen and (max-width: 400px) {
+    h1 {
+        font-size: 35px;
+    }
+    h2 {
+        font-size: 20px;
+    }
+    .grid-box {
+        width: 30vw;
+        height: 30vw;
+        font-size: 28vw;
+    }
+    .player-name {
+        font-size: 28px;
+    }
+    #turn-display {
+        font-size: 28px;
+    }
+    .player-mark {
+        font-size: 35px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #scoreboard {
+        flex-direction: column;
+    }
+}
+
